@@ -4,13 +4,18 @@
 import requests
 import json
 from typing import Dict
-from datetime import datetime
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from dataclasses import asdict, dataclass
 from typing import Dict, List, Optional
 import unicodedata
 
 BASE_URL = "https://qlgd.dlu.edu.vn/public/DrawingProfessorSchedule"
+
+@dataclass
+class TimeSlot:
+    start_time: str
+    end_time: str
 
 @dataclass
 class ClassSession:
@@ -20,6 +25,8 @@ class ClassSession:
     period: str  # keep original for reference
     period_begin: int
     period_end: int
+    time_begin: str  # New field
+    time_end: str    # New field
     taught_lessons: str
     room: str
     content: str
@@ -42,11 +49,44 @@ class ScheduleCrawler:
         self.year_study = "2024-2025"
         self.term_id = "HK02"
         self.professor_id = "011.031.00125"
+        self.period_map = self._initialize_period_map()
     
     def build_url(self, week: int) -> str:
         timestamp = datetime.now().timestamp()
         return f"{BASE_URL}?YearStudy={self.year_study}&TermID={self.term_id}&Week={week}&ProfessorID={self.professor_id}&t={timestamp}"
     
+    def _initialize_period_map(self) -> Dict[int, TimeSlot]:
+        """Initialize mapping of period numbers to actual times"""
+        periods = {}
+        
+        # Morning periods (1-6)
+        current_time = datetime.strptime("07:30", "%H:%M")
+        for period in range(1, 7):
+            start_time = current_time.strftime("%H:%M")
+            end_time = (current_time + timedelta(minutes=45)).strftime("%H:%M")
+            periods[period] = TimeSlot(start_time, end_time)
+            
+            # Add break time
+            if period == 3:  # Long break after period 3
+                current_time += timedelta(minutes=45 + 30)  # Period + long break
+            else:
+                current_time += timedelta(minutes=45 + 5)   # Period + short break
+        
+        # Afternoon periods (7-12)
+        current_time = datetime.strptime("13:00", "%H:%M")
+        for period in range(7, 13):
+            start_time = current_time.strftime("%H:%M")
+            end_time = (current_time + timedelta(minutes=45)).strftime("%H:%M")
+            periods[period] = TimeSlot(start_time, end_time)
+            
+            # Add break time
+            if period == 9:  # Long break after period 9
+                current_time += timedelta(minutes=45 + 30)  # Period + long break
+            else:
+                current_time += timedelta(minutes=45 + 5)   # Period + short break
+        
+        return periods
+
     def _parse_period(self, period_str: str) -> tuple[int, int]:
         """Extract begin and end periods from period string like '1->4'"""
         try:
@@ -69,6 +109,10 @@ class ScheduleCrawler:
             period_str = spans[3].text.replace('-Tiết:', '').strip() if spans[3] else ""
             period_begin, period_end = self._parse_period(period_str)
             
+            # Get time slots for the periods
+            time_begin = self.period_map[period_begin].start_time if period_begin in self.period_map else "00:00"
+            time_end = self.period_map[period_end].end_time if period_end in self.period_map else "00:00"
+            
             return ClassSession(
                 subject=spans[0].text.strip() if spans[0] else "",
                 class_code=spans[1].text.replace('-Mã LHP:', '').strip() if spans[1] else "",
@@ -76,6 +120,8 @@ class ScheduleCrawler:
                 period=period_str,
                 period_begin=period_begin,
                 period_end=period_end,
+                time_begin=time_begin,
+                time_end=time_end,
                 taught_lessons=spans[4].text.replace('-Đã dạy:', '').strip() if spans[4] else "",
                 room=spans[5].text.replace('-Phòng :', '').strip() if spans[5] else "",
                 content=spans[6].text.replace('-Nội dung :', '').strip() if spans[6] else ""
