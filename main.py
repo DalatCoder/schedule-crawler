@@ -183,13 +183,17 @@ class ScheduleCrawler:
 
 def main():
     crawler = ScheduleCrawler()
-    schedule = crawler.fetch_schedule(10)
+    schedule = crawler.fetch_schedule(3)
+    
+    # Generate filename with current date
+    current_date = datetime.now().strftime("%Y%m%d")
+    filename = f'schedule_{current_date}.json'
     
     # Save to JSON file with pretty printing
-    with open('schedule.json', 'w', encoding='utf-8') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         json.dump(schedule, f, ensure_ascii=False, indent=2)
     
-    print("Schedule has been saved to schedule.json")
+    print(f"Schedule has been saved to {filename}")
 
 if __name__ == "__main__":
     main()
