@@ -6,7 +6,8 @@ from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, 
     QHBoxLayout, QLabel, QComboBox, QPushButton, 
     QTextEdit, QTabWidget, QFileDialog, QMessageBox,
-    QProgressBar, QTableWidget, QTableWidgetItem, QHeaderView
+    QProgressBar, QTableWidget, QTableWidgetItem, QHeaderView,
+    QLineEdit
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from main import ScheduleCrawler
@@ -104,11 +105,14 @@ class MainWindow(QMainWindow):
                 terms = json.load(f)
                 self.term_combo.addItems([term['value'] for term in terms])
             
-            # Load teachers
+            # Load teachers with modified storage
             with open('config/teachers.json', 'r') as f:
-                teachers = json.load(f)
-                for teacher in teachers:
-                    self.teacher_combo.addItem(f"{teacher['full_name']} ({teacher['id']})", teacher['id'])
+                self.all_teachers = json.load(f)
+                for teacher in self.all_teachers:
+                    self.teacher_combo.addItem(
+                        f"{teacher['full_name']} ({teacher['id']})",
+                        teacher['id']
+                    )
             
             # Load weeks
             with open('config/weeks.json', 'r') as f:
@@ -153,12 +157,26 @@ class MainWindow(QMainWindow):
         term_layout.addWidget(self.term_combo)
         form_layout.addLayout(term_layout)
         
-        # Teacher selection
-        teacher_layout = QHBoxLayout()
-        teacher_layout.addWidget(QLabel("Teacher:"))
+        # Teacher selection with filter
+        teacher_layout = QVBoxLayout()  # Changed to VBox to stack filter and combo
+        teacher_header = QHBoxLayout()
+        teacher_header.addWidget(QLabel("Teacher:"))
+        
+        # Add search box
+        self.teacher_filter = QLineEdit()
+        self.teacher_filter.setPlaceholderText("Search teacher...")
+        self.teacher_filter.textChanged.connect(self.filter_teachers)
+        teacher_header.addWidget(self.teacher_filter)
+        
+        teacher_layout.addLayout(teacher_header)
+        
         self.teacher_combo = QComboBox()
+        self.teacher_combo.setMaxVisibleItems(10)  # Show more items in dropdown
         teacher_layout.addWidget(self.teacher_combo)
         form_layout.addLayout(teacher_layout)
+        
+        # Store original teacher items for filtering
+        self.all_teachers = []
         
         # Week selection
         week_layout = QHBoxLayout()
@@ -374,6 +392,23 @@ class MainWindow(QMainWindow):
         # Simulate progress
         current = self.ics_progress.value()
         self.ics_progress.setValue(min(current + 45, 90))
+
+    def filter_teachers(self, search_text):
+        self.teacher_combo.clear()
+        search_text = search_text.lower()
+        
+        for teacher in self.all_teachers:
+            # Search in both full name and ID
+            if (search_text in teacher['full_name'].lower() or 
+                search_text in teacher['id'].lower()):
+                self.teacher_combo.addItem(
+                    f"{teacher['full_name']} ({teacher['id']})",
+                    teacher['id']
+                )
+        
+        # If we have items after filtering, select the first one
+        if self.teacher_combo.count() > 0:
+            self.teacher_combo.setCurrentIndex(0)
 
 def main():
     # Create config directory if it doesn't exist
