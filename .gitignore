@@ -3,3 +3,6 @@ venv/
 schedule_*
 *.ics
 __pycache__/
+build/
+app.spec
+dist/
