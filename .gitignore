@@ -1,6 +1,6 @@
 .DS_Store
 venv/
-schedule_*
+schedule_*.json
 *.ics
 __pycache__/
 build/
