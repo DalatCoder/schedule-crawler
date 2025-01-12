@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "week_number": 17,
+    "start_date": "03/03/2025",
+    "end_date": "09/03/2025",
+    "professor_name": "La Quốc  Thắng"
+  },
+  "schedule": {
+    "Thứ 2": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    },
+    "Thứ 3": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    },
+    "Thứ 4": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    },
+    "Thứ 5": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    },
+    "Thứ 6": {
+      "morning": [
+        {
+          "subject": "Nguyên lý lập trình hướng đối tượng",
+          "class_code": "24220CT120207",
+          "class_name": "CTK48A - nhom 2, DKK47 - nhom 2",
+          "period": "1->4",
+          "period_begin": 1,
+          "period_end": 4,
+          "taught_lessons": "24/60 tiết",
+          "room": "TV1",
+          "content": ""
+        }
+      ],
+      "afternoon": [
+        {
+          "subject": "Phát triển ứng dụng di động",
+          "class_code": "24220CT3132D02",
+          "class_name": "CTK46-PM - nhom 1",
+          "period": "7->10",
+          "period_begin": 7,
+          "period_end": 10,
+          "taught_lessons": "40/60 tiết",
+          "room": "A8.5",
+          "content": ""
+        }
+      ],
+      "evening": []
+    },
+    "Thứ 7": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    },
+    "Chủ nhật": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    }
+  }
+}
