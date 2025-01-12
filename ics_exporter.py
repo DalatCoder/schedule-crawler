@@ -18,12 +18,27 @@ class ICSExporter:
         formatted_time = time_str.replace(":", "") + "00"
         return f"{formatted_date}T{formatted_time}"
 
-    def create_ics_content(self, schedule_file: str) -> str:
-        with open(schedule_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            
-        metadata = data['metadata']
-        schedule = data['schedule']
+    def create_ics_content_from_data(self, schedule_data):
+        """Create ICS content directly from schedule data dictionary"""
+        try:
+            # Use the schedule data directly instead of loading from file
+            return self._generate_ics_content(schedule_data)
+        except Exception as e:
+            raise Exception(f"Failed to create ICS content: {str(e)}")
+
+    def create_ics_content(self, schedule_file):
+        """Create ICS content from schedule JSON file"""
+        try:
+            with open(schedule_file, 'r', encoding='utf-8') as f:
+                schedule_data = json.load(f)
+            return self._generate_ics_content(schedule_data)
+        except Exception as e:
+            raise Exception(f"Failed to create ICS content: {str(e)}")
+
+    def _generate_ics_content(self, schedule_data):
+        """Common method to generate ICS content from schedule data"""
+        metadata = schedule_data['metadata']
+        schedule = schedule_data['schedule']
         
         # Start building ICS content
         ics_lines = [

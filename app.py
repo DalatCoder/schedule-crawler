@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
     QLineEdit
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from main import ScheduleCrawler
+from schedule_crawler import ScheduleCrawler
 from ics_exporter import ICSExporter
 
 class CrawlerWorker(QThread):
@@ -59,6 +59,16 @@ class ICSWorker(QThread):
         except Exception as e:
             self.error.emit(str(e))
 
+    def create_from_data(self, schedule_data):
+        try:
+            self.progress.emit("Creating ICS file...")
+            exporter = ICSExporter()
+            ics_content = exporter.create_ics_content_from_data(schedule_data)
+            self.progress.emit("ICS content generated successfully!")
+            self.finished.emit(ics_content)
+        except Exception as e:
+            self.error.emit(str(e))
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -92,6 +102,8 @@ class MainWindow(QMainWindow):
         
         # Load configuration data
         self.load_config_data()
+
+        self.current_schedule = None  # Add this line to store current schedule
 
     def load_config_data(self):
         try:
@@ -186,9 +198,16 @@ class MainWindow(QMainWindow):
         form_layout.addLayout(week_layout)
         
         # Fetch button
+        button_layout = QHBoxLayout()
         self.fetch_button = QPushButton("Fetch Schedule")
         self.fetch_button.clicked.connect(self.fetch_schedule)
-        form_layout.addWidget(self.fetch_button)
+        button_layout.addWidget(self.fetch_button)
+
+        self.export_ics_button = QPushButton("Export to ICS")
+        self.export_ics_button.clicked.connect(self.export_current_to_ics)
+        self.export_ics_button.setEnabled(False)  # Disabled by default
+        button_layout.addWidget(self.export_ics_button)
+        form_layout.addLayout(button_layout)
         
         # Progress bar
         self.crawler_progress = QProgressBar()
@@ -256,6 +275,12 @@ class MainWindow(QMainWindow):
 
     def handle_crawler_result(self, schedule):
         try:
+            # Store the current schedule
+            self.current_schedule = schedule
+            
+            # Enable the export button
+            self.export_ics_button.setEnabled(True)
+            
             # Generate filename with current date
             current_date = datetime.now().strftime("%Y%m%d")
             filename = f'schedule_{current_date}.json'
@@ -281,6 +306,8 @@ class MainWindow(QMainWindow):
             self.crawler_progress.setValue(100)
             QMessageBox.information(self, "Success", f"Schedule saved to {filename}")
         except Exception as e:
+            self.current_schedule = None
+            self.export_ics_button.setEnabled(False)
             QMessageBox.critical(self, "Error", f"Failed to save schedule: {str(e)}")
         finally:
             self.fetch_button.setEnabled(True)
@@ -324,6 +351,8 @@ class MainWindow(QMainWindow):
             self.schedule_table.resizeRowToContents(row)
 
     def handle_crawler_error(self, error_msg):
+        self.current_schedule = None
+        self.export_ics_button.setEnabled(False)
         self.crawler_output.setText(f"Error: {error_msg}")
         self.crawler_progress.setValue(0)
         self.fetch_button.setEnabled(True)
@@ -362,6 +391,23 @@ class MainWindow(QMainWindow):
         self.ics_worker.error.connect(self.handle_ics_error)
         self.ics_worker.progress.connect(self.update_ics_progress)
         self.ics_worker.start()
+
+    def export_current_to_ics(self):
+        if not self.current_schedule:
+            QMessageBox.warning(self, "Warning", "No schedule data available")
+            return
+        
+        self.export_ics_button.setEnabled(False)
+        self.ics_progress.setValue(0)
+        
+        # Create a new worker for ICS export
+        self.ics_worker = ICSWorker(None)  # No file needed
+        self.ics_worker.finished.connect(self.handle_ics_result)
+        self.ics_worker.error.connect(self.handle_ics_error)
+        self.ics_worker.progress.connect(self.update_ics_progress)
+        
+        # Use create_from_data instead of run
+        self.ics_worker.create_from_data(self.current_schedule)
 
     def handle_ics_result(self, ics_content):
         try:
