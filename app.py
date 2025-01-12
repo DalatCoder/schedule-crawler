@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, 
     QHBoxLayout, QLabel, QComboBox, QPushButton, 
     QTextEdit, QTabWidget, QFileDialog, QMessageBox,
-    QProgressBar
+    QProgressBar, QTableWidget, QTableWidgetItem, QHeaderView
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from main import ScheduleCrawler
@@ -124,6 +124,21 @@ class MainWindow(QMainWindow):
         form_layout = QVBoxLayout(form_widget)
         layout.addWidget(form_widget)
         
+        # Today's date
+        today_layout = QHBoxLayout()
+        today_layout.addWidget(QLabel("Today:"))
+        self.today_label = QLabel(datetime.now().strftime("%d/%m/%Y"))
+        today_layout.addWidget(self.today_label)
+        form_layout.addLayout(today_layout)
+        
+        # Schedule metadata section
+        metadata_layout = QHBoxLayout()
+        metadata_layout.addWidget(QLabel("Schedule Info:"))
+        self.metadata_label = QLabel("No schedule loaded")
+        self.metadata_label.setWordWrap(True)
+        metadata_layout.addWidget(self.metadata_label)
+        form_layout.addLayout(metadata_layout)
+        
         # Year selection
         year_layout = QHBoxLayout()
         year_layout.addWidget(QLabel("Academic Year:"))
@@ -163,9 +178,18 @@ class MainWindow(QMainWindow):
         self.crawler_progress.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.crawler_progress)
         
-        # Results area
+        # Schedule Table
+        self.schedule_table = QTableWidget()
+        self.schedule_table.setColumnCount(4)
+        self.schedule_table.setHorizontalHeaderLabels(['Time', 'Subject', 'Room', 'Content'])
+        self.schedule_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        self.schedule_table.horizontalHeader().setStretchLastSection(True)
+        layout.addWidget(self.schedule_table)
+        
+        # Results area (make it smaller since we have the table now)
         self.crawler_output = QTextEdit()
         self.crawler_output.setReadOnly(True)
+        self.crawler_output.setMaximumHeight(100)  # Limit height
         layout.addWidget(self.crawler_output)
 
     def setup_ics_tab(self, layout):
@@ -222,7 +246,19 @@ class MainWindow(QMainWindow):
             with open(filename, 'w', encoding='utf-8') as f:
                 json.dump(schedule, f, ensure_ascii=False, indent=2)
             
-            # Display in output area
+            # Update table with schedule data
+            self.update_schedule_table(schedule)
+            
+            # Display metadata in a readable format
+            metadata = schedule.get('metadata', {})
+            metadata_text = (
+                f"Week: {metadata.get('week_number', 'N/A')}\n"
+                f"Period: {metadata.get('start_date', 'N/A')} - {metadata.get('end_date', 'N/A')}\n"
+                f"Professor: {metadata.get('professor_name', 'N/A')}"
+            )
+            self.metadata_label.setText(metadata_text)
+            
+            # Display full schedule in output area
             self.crawler_output.setText(json.dumps(schedule, ensure_ascii=False, indent=2))
             self.crawler_progress.setValue(100)
             QMessageBox.information(self, "Success", f"Schedule saved to {filename}")
@@ -231,11 +267,50 @@ class MainWindow(QMainWindow):
         finally:
             self.fetch_button.setEnabled(True)
 
+    def update_schedule_table(self, schedule):
+        schedule_data = schedule.get('schedule', {})
+        all_sessions = []
+        
+        # Collect all sessions from the schedule
+        for day, periods in schedule_data.items():
+            for period_type in ['morning', 'afternoon', 'evening']:
+                for session in periods.get(period_type, []):
+                    if session:  # Check if session exists
+                        time_str = f"{day} ({session['time_begin']}-{session['time_end']})"
+                        all_sessions.append({
+                            'time': time_str,
+                            'subject': session['subject'],
+                            'room': session['room'],
+                            'content': (f"Class: {session['class_name']}\n"
+                                      f"Code: {session['class_code']}\n"
+                                      f"Period: {session['period']}\n"
+                                      f"Taught: {session['taught_lessons']}")
+                        })
+
+        # Update table
+        self.schedule_table.setRowCount(len(all_sessions))
+        for row, session in enumerate(all_sessions):
+            self.schedule_table.setItem(row, 0, QTableWidgetItem(session['time']))
+            self.schedule_table.setItem(row, 1, QTableWidgetItem(session['subject']))
+            self.schedule_table.setItem(row, 2, QTableWidgetItem(session['room']))
+            self.schedule_table.setItem(row, 3, QTableWidgetItem(session['content']))
+            
+            # Make cells read-only
+            for col in range(4):
+                item = self.schedule_table.item(row, col)
+                if item:
+                    item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+
+        # Adjust row heights to content
+        for row in range(self.schedule_table.rowCount()):
+            self.schedule_table.resizeRowToContents(row)
+
     def handle_crawler_error(self, error_msg):
         self.crawler_output.setText(f"Error: {error_msg}")
         self.crawler_progress.setValue(0)
         self.fetch_button.setEnabled(True)
         QMessageBox.critical(self, "Error", error_msg)
+        self.schedule_table.setRowCount(0)  # Clear table on error
 
     def update_crawler_progress(self, message):
         self.crawler_output.append(message)
