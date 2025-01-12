@@ -2,3 +2,4 @@
 venv/
 schedule_*
 *.ics
+__pycache__/
