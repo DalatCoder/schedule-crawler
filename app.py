@@ -96,17 +96,17 @@ class MainWindow(QMainWindow):
     def load_config_data(self):
         try:
             # Load years
-            with open('config/year_studies.json', 'r') as f:
+            with open('config/year_studies.json', 'r', encoding='utf-8') as f:
                 years = json.load(f)
                 self.year_combo.addItems([year['value'] for year in years])
             
             # Load terms
-            with open('config/terms.json', 'r') as f:
+            with open('config/terms.json', 'r', encoding='utf-8') as f:
                 terms = json.load(f)
                 self.term_combo.addItems([term['value'] for term in terms])
             
             # Load teachers with modified storage
-            with open('config/teachers.json', 'r') as f:
+            with open('config/teachers.json', 'r', encoding='utf-8') as f:
                 self.all_teachers = json.load(f)
                 for teacher in self.all_teachers:
                     self.teacher_combo.addItem(
@@ -115,7 +115,7 @@ class MainWindow(QMainWindow):
                     )
             
             # Load weeks
-            with open('config/weeks.json', 'r') as f:
+            with open('config/weeks.json', 'r', encoding='utf-8') as f:
                 weeks = json.load(f)
                 self.week_combo.addItems([str(week['label']) for week in weeks])
                 
