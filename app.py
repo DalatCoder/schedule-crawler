@@ -2,6 +2,12 @@ import sys
 import json
 from datetime import datetime
 from pathlib import Path
+import os
+import subprocess
+
+# Add platform-specific imports for opening file explorer
+from sys import platform
+
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, 
     QHBoxLayout, QLabel, QComboBox, QPushButton, 
@@ -104,6 +110,7 @@ class MainWindow(QMainWindow):
         self.load_config_data()
 
         self.current_schedule = None  # Add this line to store current schedule
+        self.last_ics_file = None  # Add this line to store the last exported ICS file path
 
     def load_config_data(self):
         try:
@@ -414,18 +421,56 @@ class MainWindow(QMainWindow):
             # Generate filename
             output_file = f"teaching_schedule_{datetime.now().strftime('%Y%m%d')}.ics"
             
-            # Save ICS file
-            with open(output_file, 'w', encoding='utf-8') as f:
+            # Save ICS file with full path
+            current_dir = os.getcwd()
+            full_path = os.path.join(current_dir, output_file)
+            
+            with open(full_path, 'w', encoding='utf-8') as f:
                 f.write(ics_content)
+            
+            # Store the last ICS file path
+            self.last_ics_file = full_path
             
             # Display in output area
             self.ics_output.setText(ics_content)
             self.ics_progress.setValue(100)
-            QMessageBox.information(self, "Success", f"Calendar exported to {output_file}")
+            
+            # Create result message box with option to open location
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle("Success")
+            msg_box.setText(f"Calendar exported to {output_file}")
+            msg_box.setIcon(QMessageBox.Icon.Information)
+            
+            # Add custom button to open file location
+            open_location_button = msg_box.addButton("Open Location", QMessageBox.ButtonRole.ActionRole)
+            close_button = msg_box.addButton(QMessageBox.StandardButton.Close)
+            
+            msg_box.exec()
+            
+            # Handle button click
+            if msg_box.clickedButton() == open_location_button:
+                self.open_file_location(full_path)
+                
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save ICS file: {str(e)}")
         finally:
             self.export_button.setEnabled(True)
+            self.export_ics_button.setEnabled(True)
+
+    def open_file_location(self, file_path):
+        """Open the file explorer at the location of the given file"""
+        try:
+            if platform == "win32":
+                # Windows
+                subprocess.run(['explorer', '/select,', os.path.normpath(file_path)])
+            elif platform == "darwin":
+                # macOS
+                subprocess.run(['open', '-R', file_path])
+            else:
+                # Linux
+                subprocess.run(['xdg-open', os.path.dirname(file_path)])
+        except Exception as e:
+            QMessageBox.warning(self, "Warning", f"Could not open file location: {str(e)}")
 
     def handle_ics_error(self, error_msg):
         self.ics_output.setText(f"Error: {error_msg}")
