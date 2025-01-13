@@ -20,6 +20,7 @@ from schedule_crawler import ScheduleCrawler
 from ics_exporter import ICSExporter
 
 class CrawlerWorker(QThread):
+    """Worker thread for crawling schedule data asynchronously"""
     finished = pyqtSignal(dict)
     error = pyqtSignal(str)
     progress = pyqtSignal(str)
@@ -32,6 +33,7 @@ class CrawlerWorker(QThread):
         self.week = week
 
     def run(self):
+        """Execute the crawler operation in a separate thread to avoid blocking UI"""
         try:
             self.progress.emit("Initializing crawler...")
             crawler = ScheduleCrawler()
@@ -47,6 +49,7 @@ class CrawlerWorker(QThread):
             self.error.emit(str(e))
 
 class ICSWorker(QThread):
+    """Worker thread for ICS file generation operations"""
     finished = pyqtSignal(str)
     error = pyqtSignal(str)
     progress = pyqtSignal(str)
@@ -56,6 +59,7 @@ class ICSWorker(QThread):
         self.schedule_file = schedule_file
 
     def run(self):
+        """Execute the ICS file generation operation in a separate thread to avoid blocking UI"""
         try:
             self.progress.emit("Creating ICS file...")
             exporter = ICSExporter()
@@ -66,6 +70,7 @@ class ICSWorker(QThread):
             self.error.emit(str(e))
 
     def create_from_data(self, schedule_data):
+        """Create ICS content directly from schedule data without reading from file"""
         try:
             self.progress.emit("Creating ICS file...")
             exporter = ICSExporter()
@@ -76,6 +81,7 @@ class ICSWorker(QThread):
             self.error.emit(str(e))
 
 class MainWindow(QMainWindow):
+    """Main application window containing all UI components and logic"""
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Schedule Manager")
@@ -113,6 +119,7 @@ class MainWindow(QMainWindow):
         self.last_ics_file = None  # Add this line to store the last exported ICS file path
 
     def load_config_data(self):
+        """Load configuration data from JSON files including years, terms, teachers, and weeks"""
         try:
             # Load years
             with open('config/year_studies.json', 'r', encoding='utf-8') as f:
@@ -142,6 +149,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Error", f"Failed to load configuration: {str(e)}")
 
     def setup_crawler_tab(self, layout):
+        """Initialize and setup the crawler tab with all its UI components"""
         # Create form layout for inputs
         form_widget = QWidget()
         form_layout = QVBoxLayout(form_widget)
@@ -237,6 +245,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.crawler_output)
 
     def setup_ics_tab(self, layout):
+        """Initialize and setup the ICS export tab with all its UI components"""
         # File selection
         file_layout = QHBoxLayout()
         self.file_label = QLabel("No file selected")
@@ -265,6 +274,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.ics_output)
 
     def fetch_schedule(self):
+        """Initiate the schedule crawling process with selected parameters"""
         year_study = self.year_combo.currentText()
         term_id = self.term_combo.currentText()
         professor_id = self.teacher_combo.currentData()
@@ -281,6 +291,7 @@ class MainWindow(QMainWindow):
         self.crawler_worker.start()
 
     def handle_crawler_result(self, schedule):
+        """Process and display the crawled schedule data"""
         try:
             # Store the current schedule
             self.current_schedule = schedule
@@ -320,6 +331,7 @@ class MainWindow(QMainWindow):
             self.fetch_button.setEnabled(True)
 
     def update_schedule_table(self, schedule):
+        """Update the UI table with the fetched schedule data"""
         schedule_data = schedule.get('schedule', {})
         all_sessions = []
         
@@ -358,6 +370,7 @@ class MainWindow(QMainWindow):
             self.schedule_table.resizeRowToContents(row)
 
     def handle_crawler_error(self, error_msg):
+        """Handle and display any errors that occur during crawling"""
         self.current_schedule = None
         self.export_ics_button.setEnabled(False)
         self.crawler_output.setText(f"Error: {error_msg}")
@@ -367,12 +380,14 @@ class MainWindow(QMainWindow):
         self.schedule_table.setRowCount(0)  # Clear table on error
 
     def update_crawler_progress(self, message):
+        """Update the progress bar and display crawling status messages"""
         self.crawler_output.append(message)
         # Simulate progress
         current = self.crawler_progress.value()
         self.crawler_progress.setValue(min(current + 30, 90))
 
     def select_schedule_file(self):
+        """Open file dialog for selecting a saved schedule JSON file"""
         file_name, _ = QFileDialog.getOpenFileName(
             self,
             "Select Schedule File",
@@ -384,6 +399,7 @@ class MainWindow(QMainWindow):
             self.export_button.setEnabled(True)
 
     def export_to_ics(self):
+        """Export selected schedule file to ICS format"""
         schedule_file = self.file_label.text()
         if schedule_file == "No file selected":
             QMessageBox.warning(self, "Warning", "Please select a schedule file first")
@@ -400,6 +416,7 @@ class MainWindow(QMainWindow):
         self.ics_worker.start()
 
     def export_current_to_ics(self):
+        """Export currently loaded schedule data to ICS format"""
         if not self.current_schedule:
             QMessageBox.warning(self, "Warning", "No schedule data available")
             return
@@ -417,6 +434,7 @@ class MainWindow(QMainWindow):
         self.ics_worker.create_from_data(self.current_schedule)
 
     def handle_ics_result(self, ics_content):
+        """Process and save the generated ICS content"""
         try:
             # Generate filename
             output_file = f"teaching_schedule_{datetime.now().strftime('%Y%m%d')}.ics"
@@ -458,7 +476,7 @@ class MainWindow(QMainWindow):
             self.export_ics_button.setEnabled(True)
 
     def open_file_location(self, file_path):
-        """Open the file explorer at the location of the given file"""
+        """Open the system file explorer at the specified file location"""
         try:
             if platform == "win32":
                 # Windows
@@ -473,18 +491,21 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Warning", f"Could not open file location: {str(e)}")
 
     def handle_ics_error(self, error_msg):
+        """Handle and display any errors that occur during ICS export"""
         self.ics_output.setText(f"Error: {error_msg}")
         self.ics_progress.setValue(0)
         self.export_button.setEnabled(True)
         QMessageBox.critical(self, "Error", error_msg)
 
     def update_ics_progress(self, message):
+        """Update the progress bar and display ICS export status messages"""
         self.ics_output.append(message)
         # Simulate progress
         current = self.ics_progress.value()
         self.ics_progress.setValue(min(current + 45, 90))
 
     def filter_teachers(self, search_text):
+        """Filter the teachers dropdown list based on search text"""
         self.teacher_combo.clear()
         search_text = search_text.lower()
         
@@ -502,6 +523,7 @@ class MainWindow(QMainWindow):
             self.teacher_combo.setCurrentIndex(0)
 
 def main():
+    """Application entry point - sets up configuration and launches the UI"""
     # Create config directory if it doesn't exist
     Path('config').mkdir(exist_ok=True)
     
