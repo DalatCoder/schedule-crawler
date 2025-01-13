@@ -1,0 +1,315 @@
+<style>
+    hr {
+        margin-top: 6px;
+        border-top: 1px solid;
+    }
+</style>
+<div>
+    <div style="font-weight:bold">
+        <span style="float:left">Tu &#226;̀n 10: từ ngày 13/01/2025 đ &#234;́n ngày 19/01/2025</span>
+        <span style="float:right">Thời kh &#243;a biểu lớp: KTK48A</span>
+    </div>
+    <div style="clear:both"></div>
+    <table width="100%" style="border-collapse:collapse" border="1">
+        <tr align="center" style="background-color:LightGrey !important;height:20px">
+            <th style="background-color:#0094ff; color:#FFF; width:30px"></th>
+            <th style="background-color: LightGrey; width: 29%">Sáng</th>
+            <th style="background-color: LightGrey; width: 29%">Chiều</th>
+            <th style="background-color: LightGrey; width: 29%">Tối</th>
+        </tr>
+        <tr style="background-color:#f0ad4e">
+            <th width="30px" style="background-color:f0ad4e">
+                Thứ 2<br>(Hôm nay)
+            </th>
+            <td style="background-color:#f0ad4e;">
+                <span style="color: red;font-weight:bold">Giáo dục thể chất 2 - Võ tự vệ (TC1007D)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 02</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: DKK48, HHK48, HHK48SP, KLK48, KTK48A, KTK48B, MTK48, NHK48, TNK48</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 1-2</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: SAN07</span>
+                <br/>
+                <span style="color: blue">- GV: Lê Minh Khôi</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 2/30 tiết <br/>
+            </td>
+            <td style="background-color:#f0ad4e;">
+                <span style="color: red;font-weight:bold">Kinh tế quốc tế (20QT1206)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 02</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 7-10</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: A32.T4.A03</span>
+                <br/>
+                <span style="color: blue">- GV: Lý Mỹ Dung</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 16/45 tiết <br/>
+            </td>
+            <td style="background-color:#f0ad4e;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+        </tr>
+        <tr style="background-color:#">
+            <th width="30px" style="background-color:#5cb85c">Thứ 3</th>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Nguyên lý kế toán (20QT0004)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 06</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 1-4</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: A32.T4.B04</span>
+                <br/>
+                <span style="color: blue">- GV: Nguyễn Thị Thảo Nguyên</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 16/45 tiết <br/>
+            </td>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Giáo dục thể chất 2 - Bóng ném (TC1005D)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 05</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A, TCK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 11-12</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: SAN06</span>
+                <br/>
+                <span style="color: blue">- GV: Vũ Quang Huy</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 2/30 tiết <br/>
+            </td>
+        </tr>
+        <tr style="background-color:#">
+            <th width="30px" style="background-color:#5cb85c">Thứ 4</th>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Giáo dục thể chất 2 - Pickleball (TC1006D)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 02</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A, QTK48B, TCK48A, TCK48B</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 1-2</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: SAN01</span>
+                <br/>
+                <span style="color: blue">- GV: Trần Quốc Hùng</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 2/30 tiết <br/>
+                    <hr/>
+                    <span style="color: red;font-weight:bold">Giáo dục thể chất 2 - Bóng đá (TC1004D)</span>
+                    <br/>
+                    <span style="color:#0a4358">- Nhóm: 10</span>
+                    <br/>
+                    <span style="color:#0a4358">- Lớp: CTK48B, KTK48A</span>
+                    <br/>
+                    <span style="color:#0a4358">- Tiết: 1-2</span>
+                    <br/>
+                    <span style="color:#0a4358">- Phòng: SAN04</span>
+                    <br/>
+                    <span style="color: blue">- GV: Nguyễn Văn Luận</span>
+                    <br/>
+                    <span style="color:#0a4358">
+                        - Đã học: 2/30 tiết <br/>
+            </td>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Toán kinh tế (20QT1105)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 02</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 11-14</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: A27.05</span>
+                <br/>
+                <span style="color: blue">- GV: Trần Nhật Thiện</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 4/45 tiết <br/>
+            </td>
+        </tr>
+        <tr style="background-color:#">
+            <th width="30px" style="background-color:#5cb85c">Thứ 5</th>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Nguyên lý kế toán (20QT0004)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 06</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 1-4</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: A32.T4.B04</span>
+                <br/>
+                <span style="color: blue">- GV: Nguyễn Thị Thảo Nguyên</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 20/45 tiết <br/>
+            </td>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Giáo dục thể chất 2 - Cầu lông (TC1002D)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 04</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: HDK48, HHK48, HHK48SP, KLK48, KTK48A, MTK48, NHK48, TCK48A, TCK48B, TPK48</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 11-12</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: SAN02</span>
+                <br/>
+                <span style="color: blue">- GV: Nguyễn Thị Khánh Hòa</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 2/30 tiết <br/>
+            </td>
+        </tr>
+        <tr style="background-color:#">
+            <th width="30px" style="background-color:#5cb85c">Thứ 6</th>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Kinh tế Chính trị Mác - Lênin (LC1102D)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 09</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: AVK48F, KTK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 1-4</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: A27.05</span>
+                <br/>
+                <span style="color: blue">- GV: Nguyễn Đình Phương</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 8/30 tiết <br/>
+            </td>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Kinh tế quốc tế (20QT1206)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 02</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 7-10</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: A32.T4.A03</span>
+                <br/>
+                <span style="color: blue">- GV: Lý Mỹ Dung</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 20/45 tiết <br/>
+            </td>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+        </tr>
+        <tr style="background-color:#">
+            <th width="30px" style="background-color:#5cb85c">Thứ 7</th>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+            <td style="background-color:#;">
+                <span style="color: red;font-weight:bold">Nguyên lý Marketing (20QT1203)</span>
+                <br/>
+                <span style="color:#0a4358">- Nhóm: 02</span>
+                <br/>
+                <span style="color:#0a4358">- Lớp: KTK48A</span>
+                <br/>
+                <span style="color:#0a4358">- Tiết: 7-10</span>
+                <br/>
+                <span style="color:#0a4358">- Phòng: A31.206</span>
+                <br/>
+                <span style="color: blue">- GV: Phạm Thị Ngọc Trâm</span>
+                <br/>
+                <span style="color:#0a4358">
+                    - Đã học: 4/60 tiết <br/>
+            </td>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+        </tr>
+        <tr style="background-color:#">
+            <th width="30px" style="background-color:#5cb85c">Chủ nhật</th>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+            <td style="background-color:#;">
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+        </tr>
+    </table>
+</div>

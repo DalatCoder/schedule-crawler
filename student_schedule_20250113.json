@@ -1,0 +1,200 @@
+{
+  "metadata": {
+    "week_number": 10,
+    "start_date": "13/01/2025",
+    "end_date": "19/01/2025",
+    "class_name": "KTK48A"
+  },
+  "schedule": {
+    "Thứ 2": {
+      "morning": [
+        {
+          "subject": "Giáo dục thể chất 2 - Võ tự vệ (TC1007D)",
+          "class_code": "02",
+          "class_name": "DKK48, HHK48, HHK48SP, KLK48, KTK48A, KTK48B, MTK48, NHK48, TNK48",
+          "period": "- Tiết: 1-2",
+          "period_begin": 1,
+          "period_end": 2,
+          "time_begin": "07:30",
+          "time_end": "09:05",
+          "room": "SAN07",
+          "teacher_name": "Lê Minh Khôi"
+        }
+      ],
+      "afternoon": [
+        {
+          "subject": "Kinh tế quốc tế (20QT1206)",
+          "class_code": "02",
+          "class_name": "KTK48A",
+          "period": "- Tiết: 7-10",
+          "period_begin": 7,
+          "period_end": 10,
+          "time_begin": "13:00",
+          "time_end": "16:20",
+          "room": "A32.T4.A03",
+          "teacher_name": "Lý Mỹ Dung"
+        }
+      ],
+      "evening": []
+    },
+    "Thứ 3": {
+      "morning": [
+        {
+          "subject": "Nguyên lý kế toán (20QT0004)",
+          "class_code": "06",
+          "class_name": "KTK48A",
+          "period": "- Tiết: 1-4",
+          "period_begin": 1,
+          "period_end": 4,
+          "time_begin": "07:30",
+          "time_end": "11:00",
+          "room": "A32.T4.B04",
+          "teacher_name": "Nguyễn Thị Thảo Nguyên"
+        }
+      ],
+      "afternoon": [],
+      "evening": [
+        {
+          "subject": "Giáo dục thể chất 2 - Bóng ném (TC1005D)",
+          "class_code": "05",
+          "class_name": "KTK48A, TCK48A",
+          "period": "- Tiết: 11-12",
+          "period_begin": 11,
+          "period_end": 12,
+          "time_begin": "16:40",
+          "time_end": "18:15",
+          "room": "SAN06",
+          "teacher_name": "Vũ Quang Huy"
+        }
+      ]
+    },
+    "Thứ 4": {
+      "morning": [
+        {
+          "subject": "Giáo dục thể chất 2 - Pickleball (TC1006D)",
+          "class_code": "02",
+          "class_name": "KTK48A, QTK48B, TCK48A, TCK48B",
+          "period": "- Tiết: 1-2",
+          "period_begin": 1,
+          "period_end": 2,
+          "time_begin": "07:30",
+          "time_end": "09:05",
+          "room": "SAN01",
+          "teacher_name": "Trần Quốc Hùng"
+        },
+        {
+          "subject": "Giáo dục thể chất 2 - Bóng đá (TC1004D)",
+          "class_code": "10",
+          "class_name": "CTK48B, KTK48A",
+          "period": "- Tiết: 1-2",
+          "period_begin": 1,
+          "period_end": 2,
+          "time_begin": "07:30",
+          "time_end": "09:05",
+          "room": "SAN04",
+          "teacher_name": "Nguyễn Văn Luận"
+        }
+      ],
+      "afternoon": [],
+      "evening": [
+        {
+          "subject": "Toán kinh tế (20QT1105)",
+          "class_code": "02",
+          "class_name": "KTK48A",
+          "period": "- Tiết: 11-14",
+          "period_begin": 11,
+          "period_end": 14,
+          "time_begin": "16:40",
+          "time_end": "19:55",
+          "room": "A27.05",
+          "teacher_name": "Trần Nhật Thiện"
+        }
+      ]
+    },
+    "Thứ 5": {
+      "morning": [
+        {
+          "subject": "Nguyên lý kế toán (20QT0004)",
+          "class_code": "06",
+          "class_name": "KTK48A",
+          "period": "- Tiết: 1-4",
+          "period_begin": 1,
+          "period_end": 4,
+          "time_begin": "07:30",
+          "time_end": "11:00",
+          "room": "A32.T4.B04",
+          "teacher_name": "Nguyễn Thị Thảo Nguyên"
+        }
+      ],
+      "afternoon": [],
+      "evening": [
+        {
+          "subject": "Giáo dục thể chất 2 - Cầu lông (TC1002D)",
+          "class_code": "04",
+          "class_name": "HDK48, HHK48, HHK48SP, KLK48, KTK48A, MTK48, NHK48, TCK48A, TCK48B, TPK48",
+          "period": "- Tiết: 11-12",
+          "period_begin": 11,
+          "period_end": 12,
+          "time_begin": "16:40",
+          "time_end": "18:15",
+          "room": "SAN02",
+          "teacher_name": "Nguyễn Thị Khánh Hòa"
+        }
+      ]
+    },
+    "Thứ 6": {
+      "morning": [
+        {
+          "subject": "Kinh tế Chính trị Mác - Lênin (LC1102D)",
+          "class_code": "09",
+          "class_name": "AVK48F, KTK48A",
+          "period": "- Tiết: 1-4",
+          "period_begin": 1,
+          "period_end": 4,
+          "time_begin": "07:30",
+          "time_end": "11:00",
+          "room": "A27.05",
+          "teacher_name": "Nguyễn Đình Phương"
+        }
+      ],
+      "afternoon": [
+        {
+          "subject": "Kinh tế quốc tế (20QT1206)",
+          "class_code": "02",
+          "class_name": "KTK48A",
+          "period": "- Tiết: 7-10",
+          "period_begin": 7,
+          "period_end": 10,
+          "time_begin": "13:00",
+          "time_end": "16:20",
+          "room": "A32.T4.A03",
+          "teacher_name": "Lý Mỹ Dung"
+        }
+      ],
+      "evening": []
+    },
+    "Thứ 7": {
+      "morning": [],
+      "afternoon": [
+        {
+          "subject": "Nguyên lý Marketing (20QT1203)",
+          "class_code": "02",
+          "class_name": "KTK48A",
+          "period": "- Tiết: 7-10",
+          "period_begin": 7,
+          "period_end": 10,
+          "time_begin": "13:00",
+          "time_end": "16:20",
+          "room": "A31.206",
+          "teacher_name": "Phạm Thị Ngọc Trâm"
+        }
+      ],
+      "evening": []
+    },
+    "Chủ nhật": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    }
+  }
+}
