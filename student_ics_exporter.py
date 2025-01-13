@@ -24,45 +24,55 @@ class StudentICSExporter(ICSExporter):
             'Chủ nhật': 6
         }
         
-        base_date = datetime.strptime(metadata['start_date'], "%d/%m/%Y")
-        
-        for day, sessions in schedule.items():
-            current_date = base_date + timedelta(days=day_map[day])
-            current_date_str = current_date.strftime("%d/%m/%Y")
+        try:
+            base_date = datetime.strptime(metadata['start_date'], "%d/%m/%Y")
             
-            for period in ['morning', 'afternoon', 'evening']:
-                for session in sessions[period]:
-                    if not session:
-                        continue
+            for day, sessions in schedule.items():
+                current_date = base_date + timedelta(days=day_map[day])
+                current_date_str = current_date.strftime("%d/%m/%Y")
+                
+                for period in ['morning', 'afternoon', 'evening']:
+                    for session in sessions[period]:
+                        if not session:
+                            continue
+                            
+                        start_dt = self._format_datetime(current_date_str, session['time_begin'])
+                        end_dt = self._format_datetime(current_date_str, session['time_end'])
                         
-                    start_dt = self._format_datetime(current_date_str, session['time_begin'])
-                    end_dt = self._format_datetime(current_date_str, session['time_end'])
-                    
-                    description = (
-                        f"Mã lớp: {session['class_code']}\\n"
-                        f"Lớp: {session['class_name']}\\n"
-                        f"Tiết: {session['period']}\\n"
-                        f"Giảng viên: {session['teacher_name']}"
-                    )
-                    
-                    event_lines = [
-                        "BEGIN:VEVENT",
-                        f"UID:{self._generate_uid()}",
-                        f"DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}",
-                        f"DTSTART;TZID={self.timezone}:{start_dt}",
-                        f"DTEND;TZID={self.timezone}:{end_dt}",
-                        f"SUMMARY:{session['subject']}",
-                        f"LOCATION:{session['room']}",
-                        f"DESCRIPTION:{description}",
-                        "STATUS:CONFIRMED",
-                        "SEQUENCE:0",
-                        "END:VEVENT"
-                    ]
-                    
-                    ics_lines.extend(event_lines)
+                        description = (
+                            f"Mã lớp: {session['class_code']}\\n"
+                            f"Lớp: {session['class_name']}\\n"
+                            f"Tiết: {session['period']}\\n"
+                            f"Giảng viên: {session['teacher_name']}"
+                        )
+                        
+                        summary = f"{session['subject']}"
+                        
+                        event_lines = [
+                            "BEGIN:VEVENT",
+                            f"UID:{self._generate_uid()}",
+                            f"DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}",
+                            f"DTSTART;TZID={self.timezone}:{start_dt}",
+                            f"DTEND;TZID={self.timezone}:{end_dt}",
+                            f"SUMMARY:{summary}",
+                            f"LOCATION:{session['room']}",
+                            f"DESCRIPTION:{description}",
+                            "STATUS:CONFIRMED",
+                            "SEQUENCE:0",
+                            "END:VEVENT"
+                        ]
+                        
+                        ics_lines.extend(event_lines)
+                        
+        except Exception as e:
+            raise Exception(f"Failed to create ICS content: {str(e)}")
         
         ics_lines.append("END:VCALENDAR")
         return "\r\n".join(ics_lines)
+
+    def create_ics_content_from_data(self, schedule_data):
+        """Create ICS content directly from schedule data"""
+        return self._generate_ics_content(schedule_data)
 
 def main():
     # Find the latest student schedule file

@@ -1,0 +1,185 @@
+{
+  "metadata": {
+    "week_number": 10,
+    "start_date": "13/01/2025",
+    "end_date": "19/01/2025",
+    "class_name": "CTK48A"
+  },
+  "schedule": {
+    "Thứ 2": {
+      "morning": [],
+      "afternoon": [],
+      "evening": [
+        {
+          "subject": "Toán rời rạc (20TN1202)",
+          "class_code": "04",
+          "class_name": "CTK48A - nhom 1",
+          "period": "- Tiết: 11-14",
+          "period_begin": 11,
+          "period_end": 14,
+          "time_begin": "16:40",
+          "time_end": "19:55",
+          "room": "A24.1",
+          "teacher_name": "Dương Bảo Ninh"
+        },
+        {
+          "subject": "Toán rời rạc (20TN1202)",
+          "class_code": "05",
+          "class_name": "CTK48A - nhom 2",
+          "period": "- Tiết: 11-14",
+          "period_begin": 11,
+          "period_end": 14,
+          "time_begin": "16:40",
+          "time_end": "19:55",
+          "room": "TV1",
+          "teacher_name": "Hoàng Minh Tiến"
+        }
+      ]
+    },
+    "Thứ 3": {
+      "morning": [
+        {
+          "subject": "Giáo dục thể chất 2 - Bóng đá (TC1004D)",
+          "class_code": "09",
+          "class_name": "CTK48A, KTK48B",
+          "period": "- Tiết: 1-2",
+          "period_begin": 1,
+          "period_end": 2,
+          "time_begin": "07:30",
+          "time_end": "09:05",
+          "room": "SAN05",
+          "teacher_name": "Nguyễn Cao Nguyên"
+        }
+      ],
+      "afternoon": [],
+      "evening": []
+    },
+    "Thứ 4": {
+      "morning": [
+        {
+          "subject": "Giáo dục thể chất 2 - Cầu lông (TC1002D)",
+          "class_code": "02",
+          "class_name": "AVK48D, AVK48E, AVK48F, CSK48, CTK48A",
+          "period": "- Tiết: 3-4",
+          "period_begin": 3,
+          "period_end": 4,
+          "time_begin": "09:10",
+          "time_end": "11:00",
+          "room": "SAN02",
+          "teacher_name": "Nguyễn Thị Khánh Hòa"
+        }
+      ],
+      "afternoon": [
+        {
+          "subject": "Toán rời rạc (20TN1202)",
+          "class_code": "02",
+          "class_name": "CTK48A",
+          "period": "- Tiết: 7-10",
+          "period_begin": 7,
+          "period_end": 10,
+          "time_begin": "13:00",
+          "time_end": "16:20",
+          "room": "A27.09",
+          "teacher_name": "Hoàng Minh Tiến"
+        }
+      ],
+      "evening": []
+    },
+    "Thứ 5": {
+      "morning": [
+        {
+          "subject": "Nguyên lý lập trình hướng đối tượng (20CT1202)",
+          "class_code": "02",
+          "class_name": "CTK48A, DKK47, THK47SP",
+          "period": "- Tiết: 1-4",
+          "period_begin": 1,
+          "period_end": 4,
+          "time_begin": "07:30",
+          "time_end": "11:00",
+          "room": "A27.08",
+          "teacher_name": "Nguyễn Thị Lương"
+        }
+      ],
+      "afternoon": [],
+      "evening": []
+    },
+    "Thứ 6": {
+      "morning": [
+        {
+          "subject": "Nguyên lý lập trình hướng đối tượng (20CT1202)",
+          "class_code": "06",
+          "class_name": "CTK48A - nhom 1, DKK47 - nhom 1, THK47SP",
+          "period": "- Tiết: 1-4",
+          "period_begin": 1,
+          "period_end": 4,
+          "time_begin": "07:30",
+          "time_end": "11:00",
+          "room": "A24.1",
+          "teacher_name": "Nguyễn Thị Lương"
+        },
+        {
+          "subject": "Nguyên lý lập trình hướng đối tượng (20CT1202)",
+          "class_code": "07",
+          "class_name": "CTK48A - nhom 2, DKK47 - nhom 2",
+          "period": "- Tiết: 1-4",
+          "period_begin": 1,
+          "period_end": 4,
+          "time_begin": "07:30",
+          "time_end": "11:00",
+          "room": "TV1",
+          "teacher_name": "La Quốc Thắng"
+        }
+      ],
+      "afternoon": [
+        {
+          "subject": "Đồ họa ứng dụng (20CT1203)",
+          "class_code": "06",
+          "class_name": "CTK48A - nhom 1, THK47SP",
+          "period": "- Tiết: 7-10",
+          "period_begin": 7,
+          "period_end": 10,
+          "time_begin": "13:00",
+          "time_end": "16:20",
+          "room": "A24.1",
+          "teacher_name": "Đỗ Văn Khoa"
+        },
+        {
+          "subject": "Đồ họa ứng dụng (20CT1203)",
+          "class_code": "07",
+          "class_name": "CTK48A - nhom 2",
+          "period": "- Tiết: 7-10",
+          "period_begin": 7,
+          "period_end": 10,
+          "time_begin": "13:00",
+          "time_end": "16:20",
+          "room": "TV1",
+          "teacher_name": "Trần Thị Phương Linh"
+        }
+      ],
+      "evening": []
+    },
+    "Thứ 7": {
+      "morning": [],
+      "afternoon": [
+        {
+          "subject": "Toán rời rạc (20TN1202)",
+          "class_code": "02",
+          "class_name": "CTK48A",
+          "period": "- Tiết: 7-10",
+          "period_begin": 7,
+          "period_end": 10,
+          "time_begin": "13:00",
+          "time_end": "16:20",
+          "room": "A27.09",
+          "teacher_name": "Hoàng Minh Tiến"
+        }
+      ],
+      "evening": []
+    },
+    "Chủ nhật": {
+      "morning": [],
+      "afternoon": [],
+      "evening": []
+    }
+  }
+}

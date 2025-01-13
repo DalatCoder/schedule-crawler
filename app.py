@@ -96,27 +96,32 @@ class MainWindow(QMainWindow):
         tabs = QTabWidget()
         layout.addWidget(tabs)
         
-        # Create Crawler tab
-        crawler_tab = QWidget()
-        crawler_layout = QVBoxLayout(crawler_tab)
-        tabs.addTab(crawler_tab, "Schedule Crawler")
+        # Create Crawler tabs
+        teacher_tab = QWidget()
+        teacher_layout = QVBoxLayout(teacher_tab)
+        tabs.addTab(teacher_tab, "Teacher Schedule")
+        
+        student_tab = QWidget()
+        student_layout = QVBoxLayout(student_tab)
+        tabs.addTab(student_tab, "Student Schedule")
         
         # Create ICS Exporter tab
         ics_tab = QWidget()
         ics_layout = QVBoxLayout(ics_tab)
         tabs.addTab(ics_tab, "ICS Exporter")
         
-        # Setup Crawler tab
-        self.setup_crawler_tab(crawler_layout)
-        
-        # Setup ICS Exporter tab
+        # Setup tabs
+        self.setup_crawler_tab(teacher_layout)  # Rename existing crawler tab setup
+        self.setup_student_tab(student_layout)  # Add new student tab setup
         self.setup_ics_tab(ics_layout)
         
         # Load configuration data
         self.load_config_data()
+        self.load_student_config_data()
 
-        self.current_schedule = None  # Add this line to store current schedule
-        self.last_ics_file = None  # Add this line to store the last exported ICS file path
+        self.current_schedule = None
+        self.current_student_schedule = None
+        self.last_ics_file = None
 
     def load_config_data(self):
         """Load configuration data from JSON files including years, terms, teachers, and weeks"""
@@ -244,34 +249,125 @@ class MainWindow(QMainWindow):
         self.crawler_output.setMaximumHeight(100)  # Limit height
         layout.addWidget(self.crawler_output)
 
-    def setup_ics_tab(self, layout):
-        """Initialize and setup the ICS export tab with all its UI components"""
-        # File selection
-        file_layout = QHBoxLayout()
-        self.file_label = QLabel("No file selected")
-        file_layout.addWidget(self.file_label)
+    def setup_student_tab(self, layout):
+        """Initialize and setup the student schedule crawler tab"""
+        # Create form layout for inputs
+        form_widget = QWidget()
+        form_layout = QVBoxLayout(form_widget)
+        layout.addWidget(form_widget)
         
-        select_file_btn = QPushButton("Select Schedule File")
-        select_file_btn.clicked.connect(self.select_schedule_file)
-        file_layout.addWidget(select_file_btn)
-        layout.addLayout(file_layout)
+        # Today's date
+        today_layout = QHBoxLayout()
+        today_layout.addWidget(QLabel("Today:"))
+        self.student_today_label = QLabel(datetime.now().strftime("%d/%m/%Y"))
+        today_layout.addWidget(self.student_today_label)
+        form_layout.addLayout(today_layout)
         
-        # Export button
-        self.export_button = QPushButton("Export to ICS")
-        self.export_button.clicked.connect(self.export_to_ics)
-        self.export_button.setEnabled(False)
-        layout.addWidget(self.export_button)
+        # Schedule metadata section
+        metadata_layout = QHBoxLayout()
+        metadata_layout.addWidget(QLabel("Schedule Info:"))
+        self.student_metadata_label = QLabel("No schedule loaded")
+        self.student_metadata_label.setWordWrap(True)
+        metadata_layout.addWidget(self.student_metadata_label)
+        form_layout.addLayout(metadata_layout)
+        
+        # Year selection
+        year_layout = QHBoxLayout()
+        year_layout.addWidget(QLabel("Academic Year:"))
+        self.student_year_combo = QComboBox()
+        year_layout.addWidget(self.student_year_combo)
+        form_layout.addLayout(year_layout)
+        
+        # Term selection
+        term_layout = QHBoxLayout()
+        term_layout.addWidget(QLabel("Term:"))
+        self.student_term_combo = QComboBox()
+        term_layout.addWidget(self.student_term_combo)
+        form_layout.addLayout(term_layout)
+        
+        # Class selection with filter
+        class_layout = QVBoxLayout()
+        class_header = QHBoxLayout()
+        class_header.addWidget(QLabel("Class:"))
+        
+        # Add search box for class
+        self.class_filter = QLineEdit()
+        self.class_filter.setPlaceholderText("Search class...")
+        self.class_filter.textChanged.connect(self.filter_classes)
+        class_header.addWidget(self.class_filter)
+        
+        class_layout.addLayout(class_header)
+        
+        self.class_combo = QComboBox()
+        self.class_combo.setMaxVisibleItems(10)
+        class_layout.addWidget(self.class_combo)
+        form_layout.addLayout(class_layout)
+        
+        # Week selection
+        week_layout = QHBoxLayout()
+        week_layout.addWidget(QLabel("Week:"))
+        self.student_week_combo = QComboBox()
+        week_layout.addWidget(self.student_week_combo)
+        form_layout.addLayout(week_layout)
+        
+        # Fetch button
+        button_layout = QHBoxLayout()
+        self.student_fetch_button = QPushButton("Fetch Schedule")
+        self.student_fetch_button.clicked.connect(self.fetch_student_schedule)
+        button_layout.addWidget(self.student_fetch_button)
+
+        self.student_export_ics_button = QPushButton("Export to ICS")
+        self.student_export_ics_button.clicked.connect(self.export_current_student_to_ics)
+        self.student_export_ics_button.setEnabled(False)
+        button_layout.addWidget(self.student_export_ics_button)
+        form_layout.addLayout(button_layout)
         
         # Progress bar
-        self.ics_progress = QProgressBar()
-        self.ics_progress.setTextVisible(True)
-        self.ics_progress.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.ics_progress)
+        self.student_progress = QProgressBar()
+        self.student_progress.setTextVisible(True)
+        self.student_progress.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.student_progress)
+        
+        # Schedule Table
+        self.student_table = QTableWidget()
+        self.student_table.setColumnCount(4)
+        self.student_table.setHorizontalHeaderLabels(['Time', 'Subject', 'Room', 'Content'])
+        self.student_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        self.student_table.horizontalHeader().setStretchLastSection(True)
+        layout.addWidget(self.student_table)
         
         # Results area
-        self.ics_output = QTextEdit()
-        self.ics_output.setReadOnly(True)
-        layout.addWidget(self.ics_output)
+        self.student_output = QTextEdit()
+        self.student_output.setReadOnly(True)
+        self.student_output.setMaximumHeight(100)
+        layout.addWidget(self.student_output)
+
+    def load_student_config_data(self):
+        """Load student-specific configuration data"""
+        try:
+            # Load years (reuse existing years)
+            with open('student_config/year_studies.json', 'r', encoding='utf-8') as f:
+                years = json.load(f)
+                self.student_year_combo.addItems([year['value'] for year in years])
+            
+            # Load terms
+            with open('student_config/terms.json', 'r', encoding='utf-8') as f:
+                terms = json.load(f)
+                self.student_term_combo.addItems([term['value'] for term in terms])
+            
+            # Load classes
+            with open('student_config/classes.json', 'r', encoding='utf-8') as f:
+                self.all_classes = json.load(f)
+                for class_item in self.all_classes:
+                    self.class_combo.addItem(class_item['value'])
+            
+            # Load weeks
+            with open('student_config/weeks.json', 'r', encoding='utf-8') as f:
+                weeks = json.load(f)
+                self.student_week_combo.addItems([str(week['label']) for week in weeks])
+                
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to load student configuration: {str(e)}")
 
     def fetch_schedule(self):
         """Initiate the schedule crawling process with selected parameters"""
@@ -521,6 +617,235 @@ class MainWindow(QMainWindow):
         # If we have items after filtering, select the first one
         if self.teacher_combo.count() > 0:
             self.teacher_combo.setCurrentIndex(0)
+
+    def filter_classes(self, search_text):
+        """Filter the classes dropdown list based on search text"""
+        self.class_combo.clear()
+        search_text = search_text.lower()
+        
+        for class_item in self.all_classes:
+            if search_text in class_item['value'].lower():
+                self.class_combo.addItem(class_item['value'])
+        
+        if self.class_combo.count() > 0:
+            self.class_combo.setCurrentIndex(0)
+
+    def fetch_student_schedule(self):
+        """Fetch student schedule with selected parameters"""
+        year_study = self.student_year_combo.currentText()
+        term_id = self.student_term_combo.currentText()
+        class_id = self.class_combo.currentText()
+        week = int(self.student_week_combo.currentText())
+        
+        self.student_fetch_button.setEnabled(False)
+        self.student_output.clear()
+        self.student_progress.setValue(0)
+        
+        # Create and start student crawler worker
+        from student_schedule_crawler import StudentScheduleCrawler
+        crawler = StudentScheduleCrawler()
+        crawler.year_study = year_study
+        crawler.term_id = term_id
+        crawler.class_id = class_id
+        
+        try:
+            schedule = crawler.fetch_schedule(week)
+            self.handle_student_crawler_result(schedule)
+        except Exception as e:
+            self.handle_student_crawler_error(str(e))
+
+    def handle_student_crawler_result(self, schedule):
+        """Process and display the crawled student schedule data"""
+        try:
+            # Store the current schedule
+            self.current_student_schedule = schedule
+            
+            # Enable the export button
+            self.student_export_ics_button.setEnabled(True)
+            
+            # Generate filename with current date
+            current_date = datetime.now().strftime("%Y%m%d")
+            filename = f'student_schedule_{current_date}.json'
+            
+            # Save to JSON file
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(schedule, f, ensure_ascii=False, indent=2)
+            
+            # Update table with schedule data
+            self.update_student_schedule_table(schedule)
+            
+            # Display metadata in a readable format
+            metadata = schedule.get('metadata', {})
+            metadata_text = (
+                f"Week: {metadata.get('week_number', 'N/A')}\n"
+                f"Period: {metadata.get('start_date', 'N/A')} - {metadata.get('end_date', 'N/A')}\n"
+                f"Class: {metadata.get('class_name', 'N/A')}"
+            )
+            self.student_metadata_label.setText(metadata_text)
+            
+            # Display full schedule in output area
+            self.student_output.setText(json.dumps(schedule, ensure_ascii=False, indent=2))
+            self.student_progress.setValue(100)
+            QMessageBox.information(self, "Success", f"Schedule saved to {filename}")
+        except Exception as e:
+            self.current_student_schedule = None
+            self.student_export_ics_button.setEnabled(False)
+            QMessageBox.critical(self, "Error", f"Failed to save schedule: {str(e)}")
+        finally:
+            self.student_fetch_button.setEnabled(True)
+
+    def handle_student_crawler_error(self, error_msg):
+        """Handle and display any errors that occur during student schedule crawling"""
+        self.current_student_schedule = None
+        self.student_export_ics_button.setEnabled(False)
+        self.student_output.setText(f"Error: {error_msg}")
+        self.student_progress.setValue(0)
+        self.student_fetch_button.setEnabled(True)
+        QMessageBox.critical(self, "Error", error_msg)
+        self.student_table.setRowCount(0)
+
+    def update_student_schedule_table(self, schedule):
+        """Update the UI table with the fetched student schedule data"""
+        schedule_data = schedule.get('schedule', {})
+        all_sessions = []
+        
+        # Collect all sessions from the schedule
+        for day, periods in schedule_data.items():
+            for period_type in ['morning', 'afternoon', 'evening']:
+                for session in periods.get(period_type, []):
+                    if session:  # Check if session exists
+                        time_str = f"{day} ({session['time_begin']}-{session['time_end']})"
+                        all_sessions.append({
+                            'time': time_str,
+                            'subject': session['subject'],
+                            'room': session['room'],
+                            'content': (f"Teacher: {session['teacher_name']}\n"
+                                      f"Code: {session['class_code']}\n"
+                                      f"Period: {session['period']}")
+                        })
+
+        # Update table
+        self.student_table.setRowCount(len(all_sessions))
+        for row, session in enumerate(all_sessions):
+            self.student_table.setItem(row, 0, QTableWidgetItem(session['time']))
+            self.student_table.setItem(row, 1, QTableWidgetItem(session['subject']))
+            self.student_table.setItem(row, 2, QTableWidgetItem(session['room']))
+            self.student_table.setItem(row, 3, QTableWidgetItem(session['content']))
+            
+            # Make cells read-only
+            for col in range(4):
+                item = self.student_table.item(row, col)
+                if item:
+                    item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+
+        # Adjust row heights to content
+        for row in range(self.student_table.rowCount()):
+            self.student_table.resizeRowToContents(row)
+
+    def export_current_student_to_ics(self):
+        """Export currently loaded student schedule data to ICS format"""
+        if not self.current_student_schedule:
+            QMessageBox.warning(self, "Warning", "No student schedule data available")
+            return
+        
+        self.student_export_ics_button.setEnabled(False)
+        self.student_progress.setValue(0)
+        
+        # Create a new worker for ICS export
+        from student_ics_exporter import StudentICSExporter
+        exporter = StudentICSExporter()  # Create StudentICSExporter instance
+        self.student_ics_worker = ICSWorker(None)
+        self.student_ics_worker.finished.connect(self.handle_student_ics_result)
+        self.student_ics_worker.error.connect(self.handle_student_ics_error)
+        self.student_ics_worker.progress.connect(self.update_student_ics_progress)
+        
+        try:
+            # Use StudentICSExporter's methods directly
+            ics_content = exporter.create_ics_content_from_data(self.current_student_schedule)
+            self.student_ics_worker.finished.emit(ics_content)
+        except Exception as e:
+            self.student_ics_worker.error.emit(str(e))
+
+    def handle_student_ics_result(self, ics_content):
+        """Process and save the generated student ICS content"""
+        try:
+            # Generate filename
+            output_file = f"student_schedule_{datetime.now().strftime('%Y%m%d')}.ics"
+            
+            # Save ICS file with full path
+            current_dir = os.getcwd()
+            full_path = os.path.join(current_dir, output_file)
+            
+            with open(full_path, 'w', encoding='utf-8') as f:
+                f.write(ics_content)
+            
+            # Display in output area
+            self.student_output.setText(ics_content)
+            self.student_progress.setValue(100)
+            
+            # Create result message box with option to open location
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle("Success")
+            msg_box.setText(f"Calendar exported to {output_file}")
+            msg_box.setIcon(QMessageBox.Icon.Information)
+            
+            # Add custom button to open file location
+            open_location_button = msg_box.addButton("Open Location", QMessageBox.ButtonRole.ActionRole)
+            close_button = msg_box.addButton(QMessageBox.StandardButton.Close)
+            
+            msg_box.exec()
+            
+            # Handle button click
+            if msg_box.clickedButton() == open_location_button:
+                self.open_file_location(full_path)
+                
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to save ICS file: {str(e)}")
+        finally:
+            self.student_export_ics_button.setEnabled(True)
+
+    def handle_student_ics_error(self, error_msg):
+        """Handle and display any errors that occur during student ICS export"""
+        self.student_output.setText(f"Error: {error_msg}")
+        self.student_progress.setValue(0)
+        self.student_export_ics_button.setEnabled(True)
+        QMessageBox.critical(self, "Error", error_msg)
+
+    def update_student_ics_progress(self, message):
+        """Update the progress bar and display student ICS export status messages"""
+        self.student_output.append(message)
+        # Simulate progress
+        current = self.student_progress.value()
+        self.student_progress.setValue(min(current + 45, 90))
+
+    def setup_ics_tab(self, layout):
+        """Initialize and setup the ICS export tab"""
+        # File selection
+        file_layout = QHBoxLayout()
+        self.file_label = QLabel("No file selected")
+        file_layout.addWidget(self.file_label)
+        
+        select_file_btn = QPushButton("Select Schedule File")
+        select_file_btn.clicked.connect(self.select_schedule_file)
+        file_layout.addWidget(select_file_btn)
+        layout.addLayout(file_layout)
+        
+        # Export button
+        self.export_button = QPushButton("Export to ICS")
+        self.export_button.setEnabled(False)
+        self.export_button.clicked.connect(self.export_to_ics)
+        layout.addWidget(self.export_button)
+        
+        # Progress bar
+        self.ics_progress = QProgressBar()
+        self.ics_progress.setTextVisible(True)
+        self.ics_progress.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.ics_progress)
+        
+        # ICS output area
+        self.ics_output = QTextEdit()
+        self.ics_output.setReadOnly(True)
+        layout.addWidget(self.ics_output)
 
 def main():
     """Application entry point - sets up configuration and launches the UI"""
