@@ -60,32 +60,45 @@ class ScheduleCrawler:
         periods = {}
         
         # Morning periods (1-6)
-        current_time = datetime.strptime("07:30", "%H:%M")
+        current_time = datetime.strptime("07:30", "%H:%M")  # Start at 7:30
         for period in range(1, 7):
             start_time = current_time.strftime("%H:%M")
             end_time = (current_time + timedelta(minutes=45)).strftime("%H:%M")
-            periods[period] = TimeSlot(start_time, end_time)
+            periods[period] = TimeSlot(start_time=start_time, end_time=end_time)
             
             # Add break time
+            current_time += timedelta(minutes=45)  # Add period duration
             if period == 3:  # Long break after period 3
-                current_time += timedelta(minutes=45 + 30)  # Period + long break
+                current_time += timedelta(minutes=20)  # Long break
             else:
-                current_time += timedelta(minutes=45 + 5)   # Period + short break
+                current_time += timedelta(minutes=5)  # Short break
         
-        # Afternoon periods (7-12)
-        current_time = datetime.strptime("13:00", "%H:%M")
-        for period in range(7, 13):
+        # Afternoon periods (7-10)
+        current_time = datetime.strptime("13:00", "%H:%M")  # Start at 13:00
+        for period in range(7, 11):
             start_time = current_time.strftime("%H:%M")
             end_time = (current_time + timedelta(minutes=45)).strftime("%H:%M")
-            periods[period] = TimeSlot(start_time, end_time)
+            periods[period] = TimeSlot(start_time=start_time, end_time=end_time)
             
             # Add break time
-            if period == 9:  # Long break after period 9
-                current_time += timedelta(minutes=45 + 30)  # Period + long break
+            current_time += timedelta(minutes=45)  # Add period duration
+            if period == 8:  # Long break after period 8
+                current_time += timedelta(minutes=10)  # Long break
             else:
-                current_time += timedelta(minutes=45 + 5)   # Period + short break
+                current_time += timedelta(minutes=5)  # Short break
+        
+        # Evening periods (11-14)
+        current_time = datetime.strptime("16:40", "%H:%M")  # Start at 16:40
+        for period in range(11, 15):
+            start_time = current_time.strftime("%H:%M")
+            end_time = (current_time + timedelta(minutes=45)).strftime("%H:%M")
+            periods[period] = TimeSlot(start_time=start_time, end_time=end_time)
+            
+            # Only add short breaks between periods
+            current_time += timedelta(minutes=50)  # 45 mins + 5 mins break
         
         return periods
+
 
     def _parse_period(self, period_str: str) -> tuple[int, int]:
         """Extract begin and end periods from period string like '1->4'"""
@@ -110,8 +123,12 @@ class ScheduleCrawler:
             period_begin, period_end = self._parse_period(period_str)
             
             # Get time slots for the periods
-            time_begin = self.period_map[period_begin].start_time if period_begin in self.period_map else "00:00"
-            time_end = self.period_map[period_end].end_time if period_end in self.period_map else "00:00"
+            time_begin = "00:00"
+            time_end = "00:00"
+            if period_begin in self.period_map:
+                time_begin = self.period_map[period_begin].start_time
+            if period_end in self.period_map:
+                time_end = self.period_map[period_end].end_time
             
             return ClassSession(
                 subject=spans[0].text.strip() if spans[0] else "",
@@ -162,7 +179,7 @@ class ScheduleCrawler:
             week_span = spans[0].text.strip()
             professor_span = spans[1].text.strip()
             
-            print(f"Raw week span: {week_span}")
+            # print(f"Raw week span: {week_span}")
             
             # Extract week number from original text
             week_number = int(''.join(filter(str.isdigit, week_span.split(':')[0])))
